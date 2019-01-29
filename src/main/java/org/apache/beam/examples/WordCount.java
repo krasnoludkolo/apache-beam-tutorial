@@ -27,7 +27,9 @@ import org.apache.beam.sdk.transforms.*;
 import org.apache.beam.sdk.values.KV;
 import org.apache.beam.sdk.values.PCollection;
 
+import java.io.Serializable;
 import java.util.Arrays;
+import java.util.Comparator;
 
 public class WordCount {
 
@@ -62,9 +64,10 @@ public class WordCount {
         p.apply("ReadLines", TextIO.read().from(options.getInputFile()))
                 .apply(new CountWords())
 
-//                .apply(Max.globally((Comparator<KV<String, Long>> & Serializable)
-//                        (KV<String, Long> x, KV<String, Long> y) ->
-//                                x.getValue().compareTo(y.getValue())))
+                .apply(Max.globally((Comparator<KV<String, Long>> & Serializable)
+                        (KV<String, Long> x, KV<String, Long> y) ->
+                                x.getValue().compareTo(y.getValue())))
+
                 .apply(MapElements.via(new FormatAsTextFn()))
                 .apply("WriteCounts", TextIO.write().withNumShards(1).to(options.getOutput()));
 

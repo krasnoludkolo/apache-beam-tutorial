@@ -408,7 +408,7 @@
     </dependency>
 
     <!-- Hamcrest and JUnit are required dependencies of PAssert,
-         which is used in the main code of DebuggingWordCount example. -->
+         which is used in the Main code of DebuggingWordCount example. -->
     <dependency>
       <groupId>org.hamcrest</groupId>
       <artifactId>hamcrest-core</artifactId>
@@ -440,6 +440,13 @@
       <artifactId>mockito-core</artifactId>
       <version>${mockito.version}</version>
       <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <version>1.18.4</version>
+      <scope>provided</scope>
     </dependency>
   </dependencies>
 </project>
