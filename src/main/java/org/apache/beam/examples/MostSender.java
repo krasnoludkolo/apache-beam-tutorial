@@ -1,20 +1,14 @@
 package org.apache.beam.examples;
 
+import com.google.gson.Gson;
 import io.vavr.Tuple2;
-import io.vavr.collection.List;
-import io.vavr.collection.PriorityQueue;
-import org.apache.beam.sdk.coders.Coder;
-import org.apache.beam.sdk.coders.CoderException;
+import io.vavr.collection.*;
 import org.apache.beam.sdk.transforms.*;
 import org.apache.beam.sdk.values.KV;
 import org.apache.beam.sdk.values.PCollection;
 import org.apache.beam.sdk.values.TypeDescriptors;
 
-import java.io.*;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.stream.Collectors;
+import java.io.Serializable;
 
 final class MostSender extends PTransform<PCollection<Metric>, PCollection<String>> {
 
@@ -26,80 +20,44 @@ final class MostSender extends PTransform<PCollection<Metric>, PCollection<Strin
                         .into(TypeDescriptors.strings())
                         .via(Metric::getUser))
                 .apply(Count.perElement())
-                .apply(Combine.globally(new BestN(1)))
+                .apply(Combine.globally(new BestN(2)).withoutDefaults())
                 .apply(MapElements.via(new FormatAsTextFn()));
     }
 
-    class FormatAsTextFn extends SimpleFunction<List<KV<String, Long>>, String> {
+    class FormatAsTextFn extends SimpleFunction<List<List<KV<String, Long>>>, String> {
         @Override
-        public String apply(List<KV<String, Long>> input) {
+        public String apply(List<List<KV<String, Long>>> input) {
             return input.toString();
         }
     }
 
-    class BestN extends Combine.CombineFn<KV<String, Long>, PriorityQueue<BestN.Best>, List<KV<String, Long>>> {
+    class BestN extends Combine.CombineFn<KV<String, Long>, Map<Long,List<KV<String,Long>>>, List<List<KV<String, Long>>>> implements Serializable {
 
-        int n;
+        private int n;
 
         BestN(int n) {
             this.n = n;
         }
 
-        class Best {
-            long bestValue = 0;
-            List<KV<String, Long>> list = List.empty();
-
-            Best(KV<String, Long> input) {
-                this.bestValue = input.getValue();
-                this.list = list.append(input);
-            }
-
-            Best(List<KV<String, Long>> list) {
-                this.list = list;
-                this.bestValue = list.get(0).getValue();
-            }
-
-            List<KV<String, Long>> getList() {
-                return list;
-            }
-        }
-
-
         @Override
-        public PriorityQueue<Best> createAccumulator() {
-            return PriorityQueue.of(Comparator.comparingLong(b -> b.bestValue));
+        public Map<Long, List<KV<String, Long>>> createAccumulator() {
+            return TreeMap.empty();
         }
 
         @Override
-        public PriorityQueue<Best> addInput(PriorityQueue<Best> accumulator, KV<String, Long> input) {
-            if (accumulator.peek().bestValue == input.getValue()) {
-                List<KV<String, Long>> list = accumulator.peek().list.append(input);
-                return accumulator.drop(1).enqueue(new Best(list));
-            }else{
-                return accumulator.enqueue(new Best(input)).take(n);
-            }
+        public Map<Long, List<KV<String, Long>>> addInput(Map<Long, List<KV<String, Long>>> accumulator, KV<String, Long> input) {
+            return accumulator.put(input.getValue(),List.of(input),List::appendAll);
         }
 
         @Override
-        public PriorityQueue<Best> mergeAccumulators(Iterable<PriorityQueue<Best>> accumulators) {
-          return List
-                    .ofAll(accumulators)
-                    .flatMap(queue -> queue)
-                    .groupBy(best -> best.bestValue)
-                    .toPriorityQueue(Comparator.comparingLong(t -> t._1))
-                    .take(n)
-                    .flatMap(t -> t._2);
+        public Map<Long, List<KV<String, Long>>> mergeAccumulators(Iterable<Map<Long, List<KV<String, Long>>>> accumulators) {
+            return Stream.ofAll(accumulators).foldLeft(TreeMap.empty(),(m1, m2)->m1.merge(m2,List::appendAll));
         }
 
         @Override
-        public List<KV<String, Long>> extractOutput(PriorityQueue<Best> accumulator) {
-            return accumulator
-                    .map(Best::getList)
-                    .flatMap(l->l)
-                    .toList();
+        public List<List<KV<String, Long>>> extractOutput(Map<Long, List<KV<String, Long>>> accumulator) {
+            return accumulator.takeRight(n).toList().map(l->l._2).reverse();
         }
 
     }
-
-
 }
