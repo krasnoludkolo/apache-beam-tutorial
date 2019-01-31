@@ -28,7 +28,8 @@ final class MetricsAnalyzer implements Serializable {
                 .apply("Window", Window
                         .<Metric>into(FixedWindows.of(Duration.standardSeconds(1)))
                 )
-                .apply(new HighestMetric("speed",3))
+                .apply(new MostSender())
+//                .apply(new HighestMetric("speed",3))
                 .apply("Write", new WriteToFile());
         pipeline.run().waitUntilFinish();
     }

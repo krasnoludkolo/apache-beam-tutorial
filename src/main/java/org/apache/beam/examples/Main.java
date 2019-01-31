@@ -7,6 +7,8 @@ import org.apache.beam.sdk.testing.TestStream;
 import org.joda.time.Duration;
 import org.joda.time.Instant;
 
+import java.util.PriorityQueue;
+
 public class Main {
 
     public static void main(String[] args) {
@@ -50,7 +52,6 @@ public class Main {
 
         PipelineOptions options = PipelineOptionsFactory.create();
         new MetricsAnalyzer().runAnalyse(options, metrics);
-
     }
 
 }
