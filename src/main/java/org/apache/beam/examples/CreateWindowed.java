@@ -11,7 +11,7 @@ import org.joda.time.Instant;
 
 import java.io.Serializable;
 
-final class CreateWindowed<V> extends PTransform<PCollection<V>, PCollection<V>> implements Serializable{
+final class CreateWindowed<V> extends PTransform<PCollection<V>, PCollection<V>> implements Serializable {
 
     private SerializableFunction<V, Instant> createTimeStamp;
     private int windowDurationInSeconds;

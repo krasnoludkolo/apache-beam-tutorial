@@ -24,10 +24,6 @@ final class MetricsAnalyzer implements Serializable {
         Pipeline pipeline = Pipeline.create(options);
         pipeline
                 .apply(stream)
-//                .apply("Timestamps", WithTimestamps.of((Metric m) -> new Instant(m.getTimestamp())))
-//                .apply("Window", Window
-//                        .<Metric>into(FixedWindows.of(Duration.standardSeconds(1)))
-//                )
                 .apply(new CreateWindowed<>(m -> new Instant(m.getTimestamp()), 1))
                 .apply(new MostSender())
                 .apply("MapToText", MapElements.via(new FormatAsTextFn()))

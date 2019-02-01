@@ -7,7 +7,6 @@ import org.apache.beam.sdk.testing.TestPipeline;
 import org.apache.beam.sdk.testing.TestStream;
 import org.apache.beam.sdk.values.KV;
 import org.apache.beam.sdk.values.PCollection;
-import org.joda.time.Duration;
 import org.joda.time.Instant;
 import org.junit.Rule;
 import org.junit.Test;
@@ -18,7 +17,7 @@ public class MostSenderTest {
     public TestPipeline p = TestPipeline.create();
 
     @Test
-    public void emptyListInEmptyWindow(){
+    public void emptyListInEmptyWindow() {
         TestStream<Metric> testData = TestStream.create(AvroCoder.of(Metric.class))
                 .advanceWatermarkToInfinity();
 
@@ -34,7 +33,7 @@ public class MostSenderTest {
     }
 
     @Test
-    public void oneMostSenderInOneWindow(){
+    public void oneMostSenderInOneWindow() {
         TestStream<Metric> testData = TestStream.create(AvroCoder.of(Metric.class))
                 .addElements(
                         metric(123L, "a"),
@@ -49,14 +48,14 @@ public class MostSenderTest {
                 .apply(new MostSender());
 
         PAssert.that(result)
-                .containsInAnyOrder(List.of(List.of(KV.of("a",2L))));
+                .containsInAnyOrder(List.of(List.of(KV.of("a", 2L))));
 
         p.run();
     }
 
 
     @Test
-    public void manyMostSendersInOneWindow(){
+    public void manyMostSendersInOneWindow() {
         TestStream<Metric> testData = TestStream.create(AvroCoder.of(Metric.class))
                 .addElements(
                         metric(123L, "a"),
@@ -73,7 +72,7 @@ public class MostSenderTest {
                 .apply(new MostSender());
 
         PAssert.that(result)
-                .containsInAnyOrder(List.of(List.of(KV.of("a",2L),KV.of("b",2L))));
+                .containsInAnyOrder(List.of(List.of(KV.of("a", 2L), KV.of("b", 2L))));
 
         p.run();
     }
