@@ -9,10 +9,10 @@ public final class Metric {
 
     private String name;
     private long timestamp;
-    private double[] values;
+    private long[] values;
     private String user;
 
-    public Metric(String name, long timestamp, double[] values, String user) {
+    public Metric(String name, long timestamp, long[] values, String user) {
         this.name = name;
         this.timestamp = timestamp;
         this.values = values;

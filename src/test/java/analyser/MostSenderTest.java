@@ -1,8 +1,5 @@
 package analyser;
 
-import analyser.CreateWindowed;
-import analyser.Metric;
-import analyser.MostSender;
 import io.vavr.collection.List;
 import org.apache.beam.sdk.coders.AvroCoder;
 import org.apache.beam.sdk.testing.PAssert;
@@ -81,7 +78,7 @@ public class MostSenderTest {
     }
 
     private Metric metric(long timestamp, String name) {
-        return new Metric("speed", timestamp, new double[]{}, name);
+        return new Metric("speed", timestamp, new long[]{}, name);
     }
 
 }
