@@ -1,4 +1,4 @@
-package org.apache.beam.examples;
+package analyser;
 
 import org.apache.beam.sdk.transforms.*;
 import org.apache.beam.sdk.values.KV;

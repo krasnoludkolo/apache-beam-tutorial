@@ -1,4 +1,4 @@
-package org.apache.beam.examples;
+package analyser;
 
 import org.apache.beam.sdk.transforms.PTransform;
 import org.apache.beam.sdk.transforms.SerializableFunction;

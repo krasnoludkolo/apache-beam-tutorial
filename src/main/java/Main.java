@@ -1,13 +1,11 @@
-package org.apache.beam.examples;
-
+import analyser.Metric;
+import analyser.MetricsAnalyzer;
 import org.apache.beam.sdk.coders.AvroCoder;
 import org.apache.beam.sdk.options.PipelineOptions;
 import org.apache.beam.sdk.options.PipelineOptionsFactory;
 import org.apache.beam.sdk.testing.TestStream;
 import org.joda.time.Duration;
 import org.joda.time.Instant;
-
-import java.util.PriorityQueue;
 
 public class Main {
 

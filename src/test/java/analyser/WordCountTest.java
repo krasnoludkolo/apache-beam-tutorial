@@ -15,11 +15,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.beam.examples;
+package analyser;
 
-import org.apache.beam.examples.WordCount.CountWords;
-import org.apache.beam.examples.WordCount.ExtractWordsFn;
-import org.apache.beam.examples.WordCount.FormatAsTextFn;
+import WordCount.CountWords;
+import WordCount.ExtractWordsFn;
+import WordCount.FormatAsTextFn;
 import org.apache.beam.sdk.coders.StringUtf8Coder;
 import org.apache.beam.sdk.testing.PAssert;
 import org.apache.beam.sdk.testing.TestPipeline;

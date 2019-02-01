@@ -1,5 +1,8 @@
-package org.apache.beam.examples;
+package analyser;
 
+import analyser.CreateWindowed;
+import analyser.Metric;
+import analyser.MostSender;
 import io.vavr.collection.List;
 import org.apache.beam.sdk.coders.AvroCoder;
 import org.apache.beam.sdk.testing.PAssert;

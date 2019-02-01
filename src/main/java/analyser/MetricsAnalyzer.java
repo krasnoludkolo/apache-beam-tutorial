@@ -1,4 +1,4 @@
-package org.apache.beam.examples;
+package analyser;
 
 import io.vavr.collection.List;
 import org.apache.beam.sdk.Pipeline;
@@ -17,10 +17,10 @@ import org.joda.time.Instant;
 
 import java.io.Serializable;
 
-final class MetricsAnalyzer implements Serializable {
+public final class MetricsAnalyzer implements Serializable {
 
 
-    void runAnalyse(PipelineOptions options, TestStream<Metric> stream) {
+    public void runAnalyse(PipelineOptions options, TestStream<Metric> stream) {
         Pipeline pipeline = Pipeline.create(options);
         pipeline
                 .apply(stream)
@@ -32,7 +32,7 @@ final class MetricsAnalyzer implements Serializable {
         pipeline.run().waitUntilFinish();
     }
 
-    class FormatAsTextFn extends SimpleFunction<List<List<KV<String, Long>>>, String> {
+    public class FormatAsTextFn extends SimpleFunction<List<List<KV<String, Long>>>, String> {
         @Override
         public String apply(List<List<KV<String, Long>>> input) {
             return input.toString();

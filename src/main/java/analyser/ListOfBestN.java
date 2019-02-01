@@ -1,4 +1,4 @@
-package org.apache.beam.examples;
+package analyser;
 
 import io.vavr.collection.List;
 import io.vavr.collection.Map;
