@@ -9,7 +9,7 @@ import org.apache.beam.sdk.values.KV;
 import org.apache.beam.sdk.values.PCollection;
 import org.apache.beam.sdk.values.TypeDescriptors;
 
-final class HighestMetric extends PTransform<PCollection<Metric>, PCollection<List<List<KV<String, Long>>>>> {
+class HighestMetric extends PTransform<PCollection<Metric>, PCollection<List<List<KV<String, Long>>>>> {
 
     private String metricName;
     private int n;

@@ -40,6 +40,7 @@ class ListOfBestN extends Combine.CombineFn<KV<String, Long>, Map<Long, List<KV<
                 .takeRight(n)
                 .toList()
                 .map(l -> l._2)
+                .reverse()
                 .map(this::sortListByUsername);
     }
 

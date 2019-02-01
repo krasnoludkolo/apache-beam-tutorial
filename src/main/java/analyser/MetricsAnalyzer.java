@@ -1,8 +1,10 @@
 package analyser;
 
+import datasource.MetricDataSource;
 import io.vavr.collection.List;
 import org.apache.beam.sdk.Pipeline;
 import org.apache.beam.sdk.io.FileBasedSink;
+import org.apache.beam.sdk.io.Read;
 import org.apache.beam.sdk.io.TextIO;
 import org.apache.beam.sdk.io.fs.ResourceId;
 import org.apache.beam.sdk.options.PipelineOptions;
@@ -23,13 +25,16 @@ public final class MetricsAnalyzer implements Serializable {
     public void runAnalyse(PipelineOptions options, TestStream<Metric> stream) {
         Pipeline pipeline = Pipeline.create(options);
         pipeline
-                .apply(stream)
+                .apply(Read.from(new MetricDataSource()))
                 .apply(new CreateWindowed<>(m -> new Instant(m.getTimestamp()), 1))
-                .apply(new MostSender())
+                .apply(new MostSender(3))
                 .apply("MapToText", MapElements.via(new FormatAsTextFn()))
-//                .apply(new HighestMetric("speed",3))
                 .apply("Write", new WriteToFile());
-        pipeline.run().waitUntilFinish();
+
+
+        pipeline
+                .run()
+                .waitUntilFinish();
     }
 
     public class FormatAsTextFn extends SimpleFunction<List<List<KV<String, Long>>>, String> {

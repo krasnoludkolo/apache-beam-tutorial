@@ -24,7 +24,7 @@ public class MostSenderTest {
         PCollection<List<List<KV<String, Long>>>> result = p
                 .apply(testData)
                 .apply(new CreateWindowed<>(m -> new Instant(m.getTimestamp()), 1))
-                .apply(new MostSender());
+                .apply(new MostSender(1));
 
         PAssert.that(result)
                 .containsInAnyOrder(List.empty());
@@ -45,7 +45,7 @@ public class MostSenderTest {
         PCollection<List<List<KV<String, Long>>>> result = p
                 .apply(testData)
                 .apply(new CreateWindowed<>(m -> new Instant(m.getTimestamp()), 1))
-                .apply(new MostSender());
+                .apply(new MostSender(1));
 
         PAssert.that(result)
                 .containsInAnyOrder(List.of(List.of(KV.of("a", 2L))));
@@ -69,7 +69,7 @@ public class MostSenderTest {
         PCollection<List<List<KV<String, Long>>>> result = p
                 .apply(testData)
                 .apply(new CreateWindowed<>(m -> new Instant(m.getTimestamp()), 1))
-                .apply(new MostSender());
+                .apply(new MostSender(1));
 
         PAssert.that(result)
                 .containsInAnyOrder(List.of(List.of(KV.of("a", 2L), KV.of("b", 2L))));

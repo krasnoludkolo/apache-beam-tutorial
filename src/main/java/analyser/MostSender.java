@@ -11,6 +11,12 @@ import org.apache.beam.sdk.values.TypeDescriptors;
 
 final class MostSender extends PTransform<PCollection<Metric>, PCollection<List<List<KV<String, Long>>>>> {
 
+    private final int n;
+
+    public MostSender(int n) {
+        this.n=n;
+    }
+
     @Override
     public PCollection<List<List<KV<String, Long>>>> expand(PCollection<Metric> input) {
 
@@ -19,7 +25,7 @@ final class MostSender extends PTransform<PCollection<Metric>, PCollection<List<
                         .into(TypeDescriptors.strings())
                         .via(Metric::getUser))
                 .apply(Count.perElement())
-                .apply("FindBest", Combine.globally(new ListOfBestN(1)).withoutDefaults());
+                .apply("FindBest", Combine.globally(new ListOfBestN(n)).withoutDefaults());
     }
 
 
