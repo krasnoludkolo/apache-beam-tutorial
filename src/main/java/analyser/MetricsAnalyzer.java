@@ -49,7 +49,7 @@ public final class MetricsAnalyzer implements Serializable {
         @Override
         public PDone expand(PCollection<String> input) {
 
-            ResourceId resource = FileBasedSink.convertToFileResourceIfPossible("result");
+            ResourceId resource = FileBasedSink.convertToFileResourceIfPossible("result/res");
 
             return input
                     .apply(TextIO.write().to(new PerWindowFiles(resource))
