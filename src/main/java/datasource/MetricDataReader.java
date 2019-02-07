@@ -27,7 +27,8 @@ public final class MetricDataReader extends UnboundedSource.UnboundedReader<Metr
 
     @Override
     public boolean start() throws IOException {
-        scheduler.scheduleAtFixedRate(this::createAndAddRandomMetric, 0, 1, TimeUnit.MILLISECONDS);
+        System.out.println("Start");
+        scheduler.scheduleAtFixedRate(this::createAndAddRandomMetric, 0, 10, TimeUnit.MILLISECONDS);
         return advance();
     }
 
@@ -37,6 +38,7 @@ public final class MetricDataReader extends UnboundedSource.UnboundedReader<Metr
 
     @Override
     public boolean advance() throws IOException {
+        if (queue.size()>0)System.out.println("ad"+queue.size());
         queue.poll();
         return queue.peek()!=null;
     }
@@ -53,6 +55,7 @@ public final class MetricDataReader extends UnboundedSource.UnboundedReader<Metr
 
     @Override
     public void close() throws IOException {
+        System.out.println("AAAA");
         scheduler.shutdown();
     }
 
